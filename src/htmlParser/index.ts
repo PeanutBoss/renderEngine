@@ -48,7 +48,7 @@ export default class HtmlParser extends Parser {
 		if (this.notParseOver && this.rawText.startsWith('</')) {
 			this.index += 2 // 跳过 </ 符号
 			this.parseCloseTag()
-		} else if (this.notParseOver && this.firstChar === '<') { // 一个新的标签开始
+		} else if (this.notParseOver && this.currentChar === '<') { // 一个新的标签开始
 			this.index++ // 跳过 < 符号
 			this.parseElement()
 		} else { // 文本内容
@@ -56,7 +56,8 @@ export default class HtmlParser extends Parser {
 		}
 	}
 	private parseAttrs(element: Element) {
-		while (this.notParseOver && this.firstChar !== '>') {
+		// parseAttrs 前一步 有进行slice操作，可以保证index = 0
+		while (this.notParseOver && this.currentChar !== '>') {
 			this.removeSpace()
 			this.parseAttr(element)
 			this.removeSpace()
@@ -66,8 +67,8 @@ export default class HtmlParser extends Parser {
 	}
 	private parseAttr(element: Element) {
 		let key = '', value = ''
-		// 获取属性的key
-		while (this.notParseOver && !['>', '='].includes(this.rawText[this.index])) {
+		// 获取属性的key（parseAttrs 前一步 有进行slice操作，可以保证index = 0）
+		while (this.notParseOver && !['>', '='].includes(this.currentChar)) {
 			key += this.rawText[this.index++].trim()
 		}
 		this.sliceText()
@@ -79,13 +80,13 @@ export default class HtmlParser extends Parser {
 		this.removeSpace()
 		let startSymbol = ''
 		// 可能是单引号也可能是双引号
-		if (['\'', '"'].includes(this.rawText[this.index])) {
-			startSymbol = this.rawText[this.index]
+		if (['\'', '"'].includes(this.currentChar)) {
+			startSymbol = this.currentChar
 			this.index++ // 消费开始引号
 		}
 
 		// 获取属性值
-		while (this.notParseOver && ![startSymbol, '>'].includes(this.rawText[this.index])) {
+		while (this.notParseOver && ![startSymbol, '>'].includes(this.currentChar)) {
 			value += this.rawText[this.index++]
 		}
 		this.index++ // 消费结束引号
@@ -96,7 +97,7 @@ export default class HtmlParser extends Parser {
 	private parseTag() {
 		this.removeSpace()
 		let tag = ''
-		while (![' ', '>'].includes(this.rawText[this.index])) {
+		while (![' ', '>'].includes(this.currentChar)) {
 			tag += this.rawText[this.index++]
 		}
 		this.sliceText()
@@ -104,7 +105,7 @@ export default class HtmlParser extends Parser {
 	}
 	private parseCloseTag() {
 		let tag = ''
-		while (this.notParseOver && this.rawText[this.index] !== '>') {
+		while (this.notParseOver && this.currentChar !== '>') {
 			tag += this.rawText[this.index++]
 		}
 		this.index++ // 消费闭合标签的 > 符号
@@ -120,7 +121,7 @@ export default class HtmlParser extends Parser {
 	private parseText() {
 		let content = ''
 		// 在遇到 < 前，都是文本部分
-		while (this.notParseOver && this.rawText[this.index] !== '<') {
+		while (this.notParseOver && this.currentChar !== '<') {
 			content += this.rawText[this.index++]
 		}
 
