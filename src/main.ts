@@ -11,7 +11,7 @@ const html = `
   </div>
 `
 const htmlParser = new HTMLParser()
-const htmlTree = htmlParser.parseHTML(html)
+const htmlTree = htmlParser.parse(html)
 console.log('------------------htmlTree------------------')
 console.log(
 	JSON.stringify(htmlTree, null, 2)

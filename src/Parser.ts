@@ -3,6 +3,7 @@ export default abstract class Parser {
 	protected index = 0
 	protected length = 0
 	constructor() {}
+	abstract parse(rawText: string): any
 	protected removeSpace() {
 		while (this.notParseOver && [' ', '\n', '\t', '\r', '\r\n'].includes(this.rawText[this.index])) {
 			this.index++

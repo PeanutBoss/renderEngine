@@ -4,22 +4,25 @@ import Parser from '../Parser'
 
 export default class HtmlParser extends Parser {
 	private stack: Element[] = []
-	parseHTML(html: string) {
-		this.rawText = html.trim()
+	parse(rawText: string) {
+		// 初始化parser
+		this.rawText = rawText.trim()
 		this.length = this.rawText.length
 		this.index = 0
 		this.stack = []
 
+		return this.parseHTML()
+	}
+
+	parseHTML() {
 		const root = element('root')
 		this.stack.push(root)
 
 		while (this.notParseOver) {
 			this.removeSpace()
 			if (this.rawText.startsWith('</')) {
-				this.index += 2 // 跳过 </ 符号
 				this.parseCloseTag()
 			} else if (this.rawText.startsWith('<')) {
-				this.index++
 				this.parseElement()
 			} else {
 				this.parseText()
@@ -29,6 +32,8 @@ export default class HtmlParser extends Parser {
 		return root
 	}
 	private parseElement() {
+		this.index++ // 消费 < 符号
+
 		const tag = this.parseTag()
 
 		const el = element(tag)
@@ -45,11 +50,9 @@ export default class HtmlParser extends Parser {
 		this.removeSpace()
 
 		// 一个标签内容结束
-		if (this.notParseOver && this.rawText.startsWith('</')) {
-			this.index += 2 // 跳过 </ 符号
+		if (this.notParseOver && this.rawText.startsWith('</')) { // 闭合标签
 			this.parseCloseTag()
 		} else if (this.notParseOver && this.currentChar === '<') { // 一个新的标签开始
-			this.index++ // 跳过 < 符号
 			this.parseElement()
 		} else { // 文本内容
 			this.parseText()
@@ -71,9 +74,8 @@ export default class HtmlParser extends Parser {
 		while (this.notParseOver && !['>', '='].includes(this.currentChar)) {
 			key += this.rawText[this.index++].trim()
 		}
-		this.sliceText()
 
-		// 需要消费 =" xx "  或 ' xx '
+		this.sliceText()
 
 		this.removeSpace()
 		this.index++ // 消费 =
@@ -104,15 +106,18 @@ export default class HtmlParser extends Parser {
 		return tag
 	}
 	private parseCloseTag() {
+		this.index += 2 // 消费 </ 符号
 		let tag = ''
 		while (this.notParseOver && this.currentChar !== '>') {
 			tag += this.rawText[this.index++]
 		}
 		this.index++ // 消费闭合标签的 > 符号
+
 		const lastNode = this.stack.at(-1)
 		if (tag === lastNode.tagName) {
 			this.stack.pop()
 			this.removeSpace()
+			// 一轮结束后会执行最外层的while循环，这个while循环结束时会递增index，会跳过一个未消费的符号，所以在这里进行递减操作
 			this.index--
 		} else {
 			throw Error('错误的结束标签')
@@ -132,9 +137,9 @@ export default class HtmlParser extends Parser {
 		this.removeSpace() // 目的是为了切除已消费的html字符
 
 		if (this.notParseOver && this.rawText.startsWith('</')) { // 遇到闭合标签
-			this.index += 2 // 消费 </
 			this.parseCloseTag()
 		} else { // 遇到一个新的开始标签
+			// 一轮解析结束后会执行最外层的while循环，这个while循环结束时会递增index，会跳过一个未消费的符号，所以在这里进行递减操作
 			this.index--
 			return // 跳出重新执行最外层while循环
 		}
