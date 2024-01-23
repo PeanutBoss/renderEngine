@@ -1,6 +1,6 @@
 import Parser from '../Parser'
 
-interface Rule {
+export interface Rule {
 	selectors: Selector[]
 	declarations: Declaration[]
 }

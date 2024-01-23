@@ -29,7 +29,7 @@ export default class HtmlParser extends Parser {
 			}
 			this.index++
 		}
-		return root
+		return root.children[0]
 	}
 	private parseElement() {
 		this.index++ // 消费 < 符号
