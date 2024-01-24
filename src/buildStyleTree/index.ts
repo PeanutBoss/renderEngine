@@ -1,25 +1,23 @@
 import type { Node, Element } from '../htmlParser/dom'
-import {NodeType} from '../htmlParser/dom'
-import type {Rule} from '../cssParser'
+import { NodeType } from '../htmlParser/dom'
+import type { Rule } from '../cssParser'
 
-interface StyleNode {
+export interface StyleNode {
 	node: Node
 	value: Record<string, any>
 	children: StyleNode[]
 }
 
-/*
-* TODO
-*  xxx 1.继承 xxx
-*  xxx 2.文本节点 xxx
-*  xxx 3.添加本身的style xxx
-*  xxx 4.删除多余空格 xxx
-* */
+export enum Display {
+	Inline = 'inline',
+	Block = 'block',
+	None = 'none'
+}
 
 export const inheritableAttrs = ['color', 'font-size']
 
 export function buildStyleTree(els: Node | Node[], cssRules: Rule[]) {
-	if (Array.isArray(els)) return []
+	if (Array.isArray(els)) return els.map(el => getStyleNode(el, cssRules))
 	return getStyleNode(els, cssRules)
 }
 
@@ -137,4 +135,8 @@ function removeSurplusSpace(styles: StyleNode['value']) {
 		newStyle[key.trim()] = styles[key].trim()
 	}
 	return newStyle
+}
+
+export function getDisplayValue(styleNode: StyleNode) {
+	return styleNode.value?.display || Display.Inline
 }
