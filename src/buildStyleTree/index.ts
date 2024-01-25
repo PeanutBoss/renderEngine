@@ -25,11 +25,13 @@ function getStyleNode(ele: Node, cssRules: Rule[], parent?: StyleNode) {
 	//  可以继承的样式
 	const inheritStyle = getInheritableStyle(parent?.value)
 
+	getGlobbingStyle(cssRules)
+
 	const styleNode = {
 		node: ele,
 		// 文本节点直接使用可继承的样式 inheritStyle
-		// 继承样式优先级比本身的低
-		value: { ...inheritStyle, ...styleByRules(ele, cssRules) },
+		// 继承样式优先级比通配样式低 通配样式优先级比本身的低
+		value: { ...inheritStyle, ...getGlobbingStyle(cssRules), ...styleByRules(ele, cssRules) },
 		children: []
 	}
 
@@ -130,13 +132,25 @@ function getInheritableStyle(style: StyleNode['value']) {
 }
 
 function removeSurplusSpace(styles: StyleNode['value']) {
-	const newStyle = {}
 	for (const key in styles) {
-		newStyle[key.trim()] = styles[key].trim()
+		styles[key.trim()] = styles[key].trim()
+		if (key.trim() !== key) delete styles[key]
 	}
-	return newStyle
 }
 
 export function getDisplayValue(styleNode: StyleNode) {
 	return styleNode.value?.display || Display.Inline
+}
+
+function getGlobbingStyle(cssRules: Rule[]) {
+	const globbingDeclarations: Rule['declarations'] = []
+	for (const rule of cssRules) {
+		const isGlobbing = rule.selectors.some(se => se.tagName === '*')
+		if (isGlobbing) globbingDeclarations.push(...rule.declarations)
+	}
+
+	return globbingDeclarations.reduce((preV, curV) => {
+		preV[curV.name] = curV.value
+		return preV
+	}, {})
 }

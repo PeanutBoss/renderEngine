@@ -1,6 +1,8 @@
 import HTMLParser from './htmlParser'
 import CSSParser from './cssParser'
-import { buildStyleTree } from './buildStyleTree'
+import { buildStyleTree, StyleNode } from './buildStyleTree'
+import { getLayoutTree } from './layout'
+import Dimensions from './layout/Dimensions'
 
 const html = `
 	<html class="root wrap" id="13579" style="padding: 10px">
@@ -38,6 +40,9 @@ const css = `
 	.color-red {
 		color: red;
 	}
+	* {
+		display: block;
+	}
 `
 const cssParser = new CSSParser()
 const cssRule = cssParser.parse(css)
@@ -46,8 +51,16 @@ console.log(
 	JSON.stringify(cssRule, null, 2)
 )
 
-const styleTree = buildStyleTree(htmlTree, cssRule)
+const styleTree = buildStyleTree(htmlTree, cssRule) as StyleNode
 console.log('------------------styleTree------------------')
 console.log(
 	JSON.stringify(styleTree, null, 2)
 )
+
+// const dimensions = new Dimensions()
+// dimensions.content.width = 600
+// dimensions.content.height = 800
+// console.log('------------------layoutTree------------------')
+// console.log(
+// 	JSON.stringify(getLayoutTree(styleTree, dimensions))
+// )
