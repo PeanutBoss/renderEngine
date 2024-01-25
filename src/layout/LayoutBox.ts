@@ -34,7 +34,6 @@ export default class LayoutBox {
 	 */
 	calculateBlockWidth(parentBlock: Dimensions) {
 		const styleValue = this.styleNode?.value || {}
-		const parentWidth = parentBlock.content.width
 
 		/* 计算内容区、边框、内边距、外边距尺寸 */
 		let width = styleValue.width ?? 'auto' // 值为auto时按 0 计算
@@ -54,6 +53,8 @@ export default class LayoutBox {
 		const isMarginLeftAuto = marginLeft === 'auto'
 		const isMarginRightAuto = marginRight === 'auto'
 
+		// 根据父级元素的宽度，结合当前元素的外边距调整当前元素的宽度
+		const parentWidth = parentBlock.content.width
 		// 当前块的宽度超过了父元素的宽度
 		if (!isWidthAuto && totalWidth > parentWidth) {
 			// 如果当前块的左右外边距是auto，那么将左右外边距都设置为0

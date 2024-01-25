@@ -10,7 +10,7 @@ const html = `
 			<div class =  " wrap box" id="container  "   >
 				this is a text
 				<div class=" child " data-index="2"  >
-					<div class="grand-son">
+					<div class="grand-son" style="height: 20px">
 						这是一段文本
 					</div>
 				</div>
@@ -57,10 +57,10 @@ console.log(
 	JSON.stringify(styleTree, null, 2)
 )
 
-// const dimensions = new Dimensions()
-// dimensions.content.width = 600
-// dimensions.content.height = 800
-// console.log('------------------layoutTree------------------')
-// console.log(
-// 	JSON.stringify(getLayoutTree(styleTree, dimensions))
-// )
+const dimensions = new Dimensions()
+dimensions.content.width = 600
+dimensions.content.height = 800
+console.log('------------------layoutTree------------------')
+console.log(
+	JSON.stringify(getLayoutTree(styleTree, dimensions))
+)

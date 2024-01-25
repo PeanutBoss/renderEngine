@@ -4,7 +4,9 @@ import LayoutBox from './LayoutBox'
 
 export function getLayoutTree(styleNode: StyleNode, parentBlock: Dimensions) {
 	parentBlock.content.height = 0
+	// 创建布局树
 	const root = buildLayoutTree(styleNode)
+	// 布局树创建完成后开始布局操作
 	root.layout(parentBlock)
 	return root
 }
