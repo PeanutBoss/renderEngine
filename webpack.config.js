@@ -22,6 +22,7 @@ module.exports = {
   resolve: {
     extensions: ['.js', '.ts']
   },
+  devtool: 'cheap-module-source-map',
   plugins: [
     new HTMLPlugin({
       template: path.resolve(__dirname, './src/index.html')

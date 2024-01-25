@@ -82,6 +82,10 @@ export default class CSSParser extends Parser {
 				this.index++ // 消费 #
 				selector.id = this.parseIdentifier()
 				break
+			case '*':
+				this.index++ // 消费 *
+				selector.tagName = '*'
+				break
 			default:
 				selector.tagName = this.parseIdentifier()
 		}
