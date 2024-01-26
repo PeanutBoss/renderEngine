@@ -65,7 +65,6 @@ function renderText(layoutBox: LayoutBox, ctx: CanvasRenderingContext2D, parent?
 
 		ctx.fillStyle = '#333'
 		ctx.font = `${fontStyle} ${fontWeight} ${fontSize} ${fontFamily}`
-		console.log(ctx.fillStyle, 'ctx.fillStyle')
 		ctx.fillText(layoutBox.styleNode.node.nodeValue, x, y + parseInt(fontSize), width)
 	}
 }
