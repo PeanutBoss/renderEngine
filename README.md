@@ -1,37 +1,96 @@
 # renderEngine
 
-#### 介绍
-简易浏览器渲染引擎
+## HTMLParser
 
-#### 软件架构
-软件架构说明
+```ts
+enum NodeType {
+	Element = 1,
+	Text = 3
+}
 
+interface Element {
+	tagName: string
+	attributes: Record<string, string>
+	children: Node[]
+	nodeType: NodeType.Element
+}
 
-#### 安装教程
+interface Text {
+	nodeValue: string
+	nodeType: NodeType.Text
+}
 
-1.  xxxx
-2.  xxxx
-3.  xxxx
-
-#### 使用说明
-
-1.  xxxx
-2.  xxxx
-3.  xxxx
-
-#### 参与贡献
-
-1.  Fork 本仓库
-2.  新建 Feat_xxx 分支
-3.  提交代码
-4.  新建 Pull Request
+type Node = Element | Text
+```
 
 
-#### 特技
+## CSSRule
 
-1.  使用 Readme\_XXX.md 来支持不同的语言，例如 Readme\_en.md, Readme\_zh.md
-2.  Gitee 官方博客 [blog.gitee.com](https://blog.gitee.com)
-3.  你可以 [https://gitee.com/explore](https://gitee.com/explore) 这个地址来了解 Gitee 上的优秀开源项目
-4.  [GVP](https://gitee.com/gvp) 全称是 Gitee 最有价值开源项目，是综合评定出的优秀开源项目
-5.  Gitee 官方提供的使用手册 [https://gitee.com/help](https://gitee.com/help)
-6.  Gitee 封面人物是一档用来展示 Gitee 会员风采的栏目 [https://gitee.com/gitee-stars/](https://gitee.com/gitee-stars/)
+```ts
+export interface Rule {
+	selectors: Selector[]
+	declarations: Declaration[]
+}
+
+interface Selector {
+	id: string
+	class: string
+	tagName: string
+}
+
+interface Declaration {
+	name: string
+	value: string | number
+}
+```
+
+## StyleTree
+
+```ts
+interface StyleNode {
+	node: Node
+	value: Record<string, any>
+	children: StyleNode[]
+}
+
+enum Display {
+	Inline = 'inline',
+	Block = 'block',
+	None = 'none'
+}
+```
+
+## LayoutTree
+
+```ts
+enum BoxType {
+	BlockNode = 'BlockNode',
+	InlineNode = 'InlineNode',
+	AnonymousBlock = 'AnonymousBlock'
+}
+
+interface EdgeSizes {
+	left: number
+	top: number
+	right: number
+	bottom: number
+}
+
+class Rect {
+	x: number
+	y: number
+	width: number
+	height: number
+}
+
+class Dimensions {
+	content: Rect
+	padding: EdgeSizes
+	border: EdgeSizes
+	margin: EdgeSizes
+}
+```
+
+## Painting
+**绘制**
+
