@@ -3,11 +3,12 @@ import CSSParser from './cssParser'
 import { buildStyleTree, StyleNode } from './buildStyleTree'
 import { getLayoutTree } from './layout'
 import Dimensions from './layout/Dimensions'
+import painting from './painting'
 
 const html = `
-	<html class="root wrap" id="13579" style="padding: 10px">
-		<body class="color-red">
-			<div class =  " wrap box" id="container  "   >
+	<html class="root wrap" id="13579" style="">
+		<body class="color-red" style="background-color: aqua">
+			<div class =  " wrap box" id="container  " style="height: 600px">
 				this is a text
 				<div class=" child " data-index="2"  >
 					<div class="grand-son" style="height: 20px">
@@ -39,6 +40,13 @@ const css = `
 	}
 	.color-red {
 		color: red;
+		border: 5px;
+		border-color: orange;
+	}
+	.child {
+		border: 10px;
+		border-color: greenyellow;
+		margin-top: 30px;
 	}
 	* {
 		display: block;
@@ -60,7 +68,10 @@ console.log(
 const dimensions = new Dimensions()
 dimensions.content.width = 600
 dimensions.content.height = 800
+const layoutTree = getLayoutTree(styleTree, dimensions)
 console.log('------------------layoutTree------------------')
 console.log(
-	JSON.stringify(getLayoutTree(styleTree, dimensions))
+	JSON.stringify(layoutTree)
 )
+
+painting(layoutTree)

@@ -81,14 +81,12 @@ function renderExportButton(canvas: HTMLCanvasElement) {
 }
 
 function exportPNG(canvas: HTMLCanvasElement) {
-	const dataUrl = canvas.toDataURL('image/png', { type: 'image/png' })
-	let img: HTMLImageElement | null = new Image()
-	img.src = dataUrl
-	let downloadLink: HTMLAnchorElement | null = document.createElement('a')
-	downloadLink.download = '通过渲染引擎生成的图片.png'
-	downloadLink.href = dataUrl
-	downloadLink.click()
+	canvas.toBlob(blob => {
+		let downloadLink: HTMLAnchorElement | null = document.createElement('a')
+		downloadLink.download = '通过渲染引擎生成的图片.png'
+		downloadLink.href = URL.createObjectURL(blob)
+		downloadLink.click()
 
-	downloadLink = null
-	img = null
+		downloadLink = null
+	})
 }
