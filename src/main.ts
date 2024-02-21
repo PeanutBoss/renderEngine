@@ -7,7 +7,7 @@ const html = `
 		<body class="color-red">
 			<div class =  " wrap box" id="container  "   >
 				this is a text
-				<div class=" child " data-index="2"  >
+				<div class=" child " data-index="2"  style="background: aqua;">
 					<div class="grand-son">
 						这是一段文本
 					</div>
