@@ -111,7 +111,9 @@ function ruleIdentifier(selectors: Rule['selectors']) {
 function inlineStyle(el: Element) {
 	if (!el.attributes.style) return {}
 
-	const styleStrList = el.attributes.style.split(';')
+	const styleStrList = el.attributes.style
+		.split(';')
+		.filter(Boolean) // 内联样式可能以 ; 结尾，split之后可能会多出一个空串，需要过滤掉
 
 	return styleStrList.reduce((preV, curV) => {
 		const [key, value] = curV.split(':')
