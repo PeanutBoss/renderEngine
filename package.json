@@ -4,12 +4,15 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "serve": "webpack serve --config webpack.config.js"
+    "serve": "webpack serve --config webpack.config.js",
+    "build": "rollup -c rollup.config.js"
   },
+  "type": "module",
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@rollup/plugin-typescript": "^11.1.6",
     "html-webpack-plugin": "^5.6.0",
     "ts-loader": "^9.5.1",
     "typescript": "^5.3.3",
