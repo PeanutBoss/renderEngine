@@ -7,7 +7,6 @@
     "serve": "webpack serve --config webpack.config.js",
     "build": "rollup -c rollup.config.js"
   },
-  "type": "module",
   "keywords": [],
   "author": "",
   "license": "ISC",

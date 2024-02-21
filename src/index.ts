@@ -3,7 +3,7 @@ import CSSParser from './cssParser'
 import { buildStyleTree } from './buildStyleTree'
 import { getLayoutTree } from './layout'
 import Dimensions from './layout/Dimensions'
-import painting from './painting'
+import painting, { renderExportButton } from './painting'
 
 export {
 	HTMLParser,
@@ -11,5 +11,6 @@ export {
 	buildStyleTree,
 	getLayoutTree,
 	Dimensions,
-	painting
+	painting,
+	renderExportButton
 }

@@ -1,17 +1,17 @@
 import type LayoutBox from '../layout/LayoutBox'
 import {NodeType} from '../htmlParser/dom'
 
-export default function painting(layoutBox: LayoutBox) {
+export default function painting(layoutBox: LayoutBox, canvas?: HTMLCanvasElement) {
 	const { x, y, width, height } = layoutBox.dimensions.content
-	const canvas = createCanvas(width + x, height + y)
-	const ctx: CanvasRenderingContext2D = canvas.getContext('2d')
+	const canvasEl = canvas || createCanvas(width + x, height + y)
+	const ctx: CanvasRenderingContext2D = canvasEl.getContext('2d')
+
+	ctx.clearRect(0, 0, canvasEl.width, canvasEl.height)
 
 	ctx.fillStyle = '#fff'
 	ctx.fillRect(x, y, width, height)
 
 	renderLayoutBox(layoutBox, ctx)
-
-	renderExportButton(canvas)
 }
 
 function createCanvas(width, height): HTMLCanvasElement {
@@ -69,7 +69,7 @@ function renderText(layoutBox: LayoutBox, ctx: CanvasRenderingContext2D, parent?
 	}
 }
 
-function renderExportButton(canvas: HTMLCanvasElement) {
+export function renderExportButton(canvas: HTMLCanvasElement) {
 	const btn = document.createElement('button')
 	btn.style.marginTop = '10px'
 	btn.innerText = '导出图片'
